@@ -23,3 +23,10 @@ spring:
             - Path=/api/customer/**
           filters:
             - StripPrefix=2
+  kafka:
+    bootstrap-servers: localhost:9092
+    zipkin:
+      sender:
+        type: kafka
+      kafka:
+        topic: pg-traces-software
