@@ -1,8 +1,8 @@
 # Distributed version of the Spring PetClinic Sample Application built with Spring Cloud
 
 This project is forked from and extends
-[pring-petclinic/spring-petclinic-microservices](https://github.com/spring-petclinic/spring-petclinic-microservices). It
-serves as an automated performance test environment.
+[spring-petclinic/spring-petclinic-microservices](https://github.com/spring-petclinic/spring-petclinic-microservices).
+It serves as an automated performance test environment.
 
 * We use [Apache JMeter](https://jmeter.apache.org/) to generate load on the PetClinic and execute performance tests.
 * We use [Zikpin](https://zipkin.io/) to derive software traces and monitor application performance.
@@ -58,7 +58,7 @@ docker-compose up
 ```
 
 Alternatively, use the `debug` profile to additionally start
-the [Spring Boot Admin](https://github.com/codecentric/spring-boot-admin), [Grafana](https://grafana.com/),
+[Spring Boot Admin](https://github.com/codecentric/spring-boot-admin), [Grafana](https://grafana.com/),
 [Prometheus](https://prometheus.io/) and [Kafdrop](https://github.com/obsidiandynamics/kafdrop):
 
 ```
