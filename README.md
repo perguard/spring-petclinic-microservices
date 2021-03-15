@@ -2,7 +2,8 @@
 
 This project is forked from and extends
 [spring-petclinic/spring-petclinic-microservices](https://github.com/spring-petclinic/spring-petclinic-microservices).
-It serves as an automated performance test environment.
+
+It serves as an automated performance test environment:
 
 * We use [Zikpin](https://zipkin.io/) to derive software traces and monitor application performance.
 * We use [Telegraf](https://www.influxdata.com/time-series-platform/telegraf/) to derive system traces and monitor
@@ -15,7 +16,10 @@ for general instructions.
 
 ## Modifications and extensions
 
-We modified and extended the distributed version of the PetClinic in several ways.
+We modified and extended the distributed version of the PetClinic in several ways as shown in the following and
+described below:
+
+![README](README.svg)
 
 ### Collecting software traces using Zipkin and Apache Kafka
 
