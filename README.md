@@ -17,12 +17,19 @@ for general instructions.
 
 We modified and extended the distributed version of the PetClinic in several ways.
 
-### Sending Zipkin traces using Apache Kafka
+### Collecting software traces using Zipkin and Apache Kafka
 
 We instrumented the API Gateway, Vets Service, Customers Service and Visits Service, so they send
-[Zikpin](https://zipkin.io/) traces to an [Apache Kafka](https://kafka.apache.org/) topic.
+[Zikpin](https://zipkin.io/) traces to an [Apache Kafka](https://kafka.apache.org/) topic called `pg-traces-software`.
 
 This allows us to consume traces for further stream processing in a comfortable way.
+
+### Collecting system traces using Telegraf and Apache Kafka
+
+We added [Telegraf](https://www.influxdata.com/time-series-platform/telegraf/)
+to [Docker Compose](https://docs.docker.com/compose/). It monitors cpu, disk, disk IO, kernel, mem, processes, swap,
+and system metrics of the entire docker host (see configuration file `telegraf.conf`). The collected metrics are sent to
+an [Apache Kafka](https://kafka.apache.org/) topic called `pg-traces-system`.
 
 ### Updating Docker Compose
 

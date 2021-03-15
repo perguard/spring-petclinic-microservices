@@ -39,7 +39,7 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "pg-traces-software:1:1"
+      KAFKA_CREATE_TOPICS: "pg-traces-software:1:1, pg-traces-system:1:1"
 
   customers-service:
     image: springcommunity/spring-petclinic-customers-service
@@ -115,6 +115,26 @@ services:
     ports:
      - 9411:9411
 
+  ## The docker host filesystem is mounted into the container because we are interested in the host's hardware stats,
+  ## cf. https://github.com/influxdata/telegraf/blob/master/docs/FAQ.md#q-how-can-i-monitor-the-docker-engine-host-from-within-a-container
+
+  telegraf:
+    image: telegraf
+    container_name: telegraf
+    restart: on-failure
+    depends_on:
+      - kafka
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - /:/hostfs:ro
+    environment:
+      - HOST_ETC=/hostfs/etc
+      - HOST_PROC=/hostfs/proc
+      - HOST_SYS=/hostfs/sys
+      - HOST_VAR=/hostfs/var
+      - HOST_RUN=/hostfs/run
+      - HOST_MOUNT_PREFIX=/hostfs
+
   admin-server:
     image: springcommunity/spring-petclinic-admin-server
     container_name: admin-server
@@ -153,7 +173,7 @@ services:
     ports:
       - 9000:9000
     environment:
-      KAFKA_BROKERCONNECT: kafka:9092
+      KAFKA_BROKERCONNECT: kafka:9093
       JVM_OPTS: "-Xms16M -Xmx48M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify"
     depends_on:
       - kafka

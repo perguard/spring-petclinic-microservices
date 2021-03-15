@@ -16,3 +16,6 @@ target/
 
 # Branch switching
 generated/
+
+# Mac OS
+.DS_Store
