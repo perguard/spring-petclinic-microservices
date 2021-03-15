@@ -80,7 +80,7 @@ To start all default containers, run of the following command:
 docker-compose up
 ```
 
-Alternatively, use the `debug` profile to start additional container:
+Alternatively, use [profiles with Compose](https://docs.docker.com/compose/profiles/) to start additional containers:
 
 * `docker-compose --profile debug up` starts [Spring Boot Admin](https://github.com/codecentric/spring-boot-admin),
   [Grafana](https://grafana.com/), [Prometheus](https://prometheus.io/) and
