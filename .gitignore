@@ -19,3 +19,6 @@ generated/
 
 # Mac OS
 .DS_Store
+
+# JMeter output
+/jmeter/test_output.csv
