@@ -4,10 +4,10 @@ This project is forked from and extends
 [spring-petclinic/spring-petclinic-microservices](https://github.com/spring-petclinic/spring-petclinic-microservices).
 It serves as an automated performance test environment.
 
-* We use [Apache JMeter](https://jmeter.apache.org/) to generate load on the PetClinic and execute performance tests.
 * We use [Zikpin](https://zipkin.io/) to derive software traces and monitor application performance.
 * We use [Telegraf](https://www.influxdata.com/time-series-platform/telegraf/) to derive system traces and monitor
   system performance.
+* We use [Apache JMeter](https://jmeter.apache.org/) to generate load on the PetClinic and execute performance tests.
 
 Please have a look at the original
 [README](https://github.com/spring-petclinic/spring-petclinic-microservices/blob/master/README.md)
@@ -27,9 +27,21 @@ This allows us to consume traces for further stream processing in a comfortable 
 ### Collecting system traces using Telegraf and Apache Kafka
 
 We added [Telegraf](https://www.influxdata.com/time-series-platform/telegraf/)
-to [Docker Compose](https://docs.docker.com/compose/). It monitors cpu, disk, disk IO, kernel, mem, processes, swap,
-and system metrics of the entire docker host (see configuration file `telegraf.conf`). The collected metrics are sent to
-an [Apache Kafka](https://kafka.apache.org/) topic called `pg-traces-system`.
+to [Docker Compose](https://docs.docker.com/compose/).
+
+Telegraf monitors cpu, disk, disk IO, kernel, mem, processes, swap, and system metrics of the entire docker host (see
+configuration file `telegraf.conf`). The collected metrics are sent to an [Apache Kafka](https://kafka.apache.org/)
+topic called `pg-traces-system`.
+
+### Performance load testing using Apache JMeter
+
+We added [Apache JMeter](https://jmeter.apache.org/) to [Docker Compose](https://docs.docker.com/compose/) in order to
+generate requests and execute performance tests.
+
+The test plan for the dockerized JMeter is located at `jmeter/petclinic_test_plan.jmx` (it is adapted
+from `spring-petclinic-api-gateway/src/test/jmeter/petclinic_test_plan.jmx`). It will be started automatically using the
+profile `load-test` (see [Run the PetClinic](#run-the-petclinic)). An output csv file we be stored
+at `jmeter/test-output.csv`.
 
 ### Updating Docker Compose
 
@@ -64,13 +76,12 @@ To start all default containers, run of the following command:
 docker-compose up
 ```
 
-Alternatively, use the `debug` profile to additionally start
-[Spring Boot Admin](https://github.com/codecentric/spring-boot-admin), [Grafana](https://grafana.com/),
-[Prometheus](https://prometheus.io/) and [Kafdrop](https://github.com/obsidiandynamics/kafdrop):
+Alternatively, use the `debug` profile to start additional container:
 
-```
-docker-compose --profile debug up
-```
+* `docker-compose --profile debug up` starts [Spring Boot Admin](https://github.com/codecentric/spring-boot-admin),
+  [Grafana](https://grafana.com/), [Prometheus](https://prometheus.io/) and
+  [Kafdrop](https://github.com/obsidiandynamics/kafdrop)
+* `docker-compose --profile load-test up` starts a load test using [Apache JMeter](https://jmeter.apache.org/).
 
 To stop and remove everything, we recommend using the following command to prevent future errors
 with [Apache Kafka](https://kafka.apache.org/).

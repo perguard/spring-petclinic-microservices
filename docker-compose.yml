@@ -135,6 +135,27 @@ services:
       - HOST_RUN=/hostfs/run
       - HOST_MOUNT_PREFIX=/hostfs
 
+  # JMeter used for load testing the application
+
+  jmeter:
+    build: ./jmeter
+    container_name: jmeter
+    depends_on:
+      - customers-service
+      - visits-service
+      - vets-service
+      - api-gateway
+    entrypoint: >
+      bash -c "dockerize
+      -wait=tcp://customers-service:8081 -timeout=300s
+      -wait=tcp://visits-service:8082 -timeout=300s
+      -wait=tcp://vets-service:8083 -timeout=300s
+      /opt/apache-jmeter-5.4/code/entry.sh"
+    volumes:
+      - ./jmeter:/opt/apache-jmeter-5.4/code
+    profiles: ["load-test"]
+
+
   admin-server:
     image: springcommunity/spring-petclinic-admin-server
     container_name: admin-server
