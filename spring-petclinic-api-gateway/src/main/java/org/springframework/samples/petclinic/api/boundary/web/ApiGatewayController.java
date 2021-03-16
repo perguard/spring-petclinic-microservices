@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.api.boundary.web;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreaker;
 import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreakerFactory;
 import org.springframework.samples.petclinic.api.application.CustomersServiceClient;
@@ -28,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.math.BigInteger;
+import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -37,6 +40,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/gateway")
+@Slf4j
 public class ApiGatewayController {
 
     private final CustomersServiceClient customersServiceClient;
@@ -45,21 +49,30 @@ public class ApiGatewayController {
 
     private final ReactiveCircuitBreakerFactory cbFactory;
 
+    private final Random random = new Random();
+
     @GetMapping(value = "owners/{ownerId}")
     public Mono<OwnerDetails> getOwnerDetails(final @PathVariable int ownerId) {
+        log.info("Request owner " + ownerId);
         return customersServiceClient.getOwner(ownerId)
-            .flatMap(owner ->
-                visitsServiceClient.getVisitsForPets(owner.getPetIds())
-                    .transform(it -> {
-                        ReactiveCircuitBreaker cb = cbFactory.create("getOwnerDetails");
-                        return cb.run(it, throwable -> emptyVisitsForPets());
-                    })
-                    .map(addVisitsToOwner(owner))
-            );
-
+            .flatMap(owner -> {
+                factorialOf(random.nextInt(2001) + 1001);
+                owner.getPetIds()
+                    .forEach(petId -> {
+                        visitsServiceClient.getVisitsForPet(petId)
+                            .transform(it -> {
+                                factorialOf(random.nextInt(2002) + 1002);
+                                ReactiveCircuitBreaker cb = cbFactory.create("getOwnerDetails");
+                                return cb.run(it, throwable -> emptyVisitsForPets());
+                            })
+                            .map(addVisitsToOwner(owner));
+                    });
+                return Mono.just(owner);
+            });
     }
 
     private Function<Visits, OwnerDetails> addVisitsToOwner(OwnerDetails owner) {
+        factorialOf(random.nextInt(2003) + 1003);
         return visits -> {
             owner.getPets()
                 .forEach(pet -> pet.getVisits()
@@ -74,4 +87,13 @@ public class ApiGatewayController {
     private Mono<Visits> emptyVisitsForPets() {
         return Mono.just(new Visits());
     }
+
+    private void factorialOf(int n) {
+        BigInteger result = BigInteger.ONE;
+        for (int i = 2; i <= n; i++) {
+            result = result.multiply(BigInteger.valueOf(i));
+        }
+        log.info("Factorial of " + n + " is " + result);
+    }
+
 }
