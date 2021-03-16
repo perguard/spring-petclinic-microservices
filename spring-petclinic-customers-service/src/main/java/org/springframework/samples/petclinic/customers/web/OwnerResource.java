@@ -24,8 +24,10 @@ import org.springframework.samples.petclinic.customers.model.OwnerRepository;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 /**
  * @author Juergen Hoeller
@@ -41,6 +43,8 @@ import java.util.Optional;
 @Slf4j
 class OwnerResource {
 
+    public static final ArrayList<Double> MEMORY_LEAKING_LIST = new ArrayList<>();
+    private Random random = new Random();
     private final OwnerRepository ownerRepository;
 
     /**
@@ -64,7 +68,8 @@ class OwnerResource {
      * Read List of Owners
      */
     @GetMapping
-    public List<Owner> findAll() {
+    public List<Owner> findAll() throws InterruptedException {
+        this.leakMemory();
         return ownerRepository.findAll();
     }
 
@@ -86,4 +91,17 @@ class OwnerResource {
         log.info("Saving owner {}", ownerModel);
         ownerRepository.save(ownerModel);
     }
+
+    /**
+     * Leak memory for performance testing purposes
+     *
+     * @throws InterruptedException
+     */
+    public void leakMemory() throws InterruptedException {
+        log.info("Leaking memory");
+        for (int i = 0; i < 1000000; i++) {
+            MEMORY_LEAKING_LIST.add(random.nextDouble());
+        }
+    }
+
 }
