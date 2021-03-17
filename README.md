@@ -1,4 +1,4 @@
-# Distributed version of the Spring PetClinic Sample Application built with Spring Cloud
+# Performance test version of the Spring PetClinic Sample Application
 
 This project is forked from and extends
 [spring-petclinic/spring-petclinic-microservices](https://github.com/spring-petclinic/spring-petclinic-microservices).
@@ -98,10 +98,10 @@ Alternatively, use [profiles with Compose](https://docs.docker.com/compose/profi
 * `docker-compose --profile debug up` starts [Spring Boot Admin](https://github.com/codecentric/spring-boot-admin),
   [Grafana](https://grafana.com/), [Prometheus](https://prometheus.io/) and
   [Kafdrop](https://github.com/obsidiandynamics/kafdrop)
-* `docker-compose --profile load-test up` starts a load test using [Apache JMeter](https://jmeter.apache.org/).
+* `docker-compose --profile load-test up` starts a load test using [Apache JMeter](https://jmeter.apache.org/)
 
 To stop and remove everything, we recommend using the following command to prevent future errors
-with [Apache Kafka](https://kafka.apache.org/).
+with [Apache Kafka](https://kafka.apache.org/):
 
 ```
 docker-compose rm -sfv
