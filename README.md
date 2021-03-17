@@ -25,6 +25,8 @@ described below:
 
 We instrumented the API Gateway, Vets Service, Customers Service and Visits Service, so they send
 [Zikpin](https://zipkin.io/) traces to an [Apache Kafka](https://kafka.apache.org/) topic called `pg-traces-software`.
+In line with this, we adapted Zipkin collector to use Kafka, which is part
+of [Docker Compose](https://docs.docker.com/compose/).
 
 This allows us to consume traces for further stream processing in a comfortable way.
 
@@ -45,7 +47,18 @@ generate requests and execute performance tests.
 The test plan for the dockerized JMeter is located at `jmeter/petclinic_test_plan.jmx` (it is adapted
 from `spring-petclinic-api-gateway/src/test/jmeter/petclinic_test_plan.jmx`). It will be started automatically using the
 profile `load-test` (see [Run the PetClinic](#run-the-petclinic)). An output csv file we be stored
-at `jmeter/test-output.csv`.
+at `jmeter/test-output.csv`. If you want to open and change the JMeter test plan, please make sure to install the
+[Concurrency Thread Group](https://jmeter-plugins.org/wiki/ConcurrencyThreadGroup/) plugin.
+
+#### Provoking performance degradations
+
+We use this project mainly to generate performance traces and provoke different performance bottlenecks. For this
+purpose, we implemented two scenarios - one memory leak and one cpu hog. Branch `apm/degradation/memory-leak` leaks
+memory in the
+[Customers Serivce](https://github.com/perguard/spring-petclinic-microservices/blob/apm/degradation/memory-leak/spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/OwnerResource.java#L100)
+and branch `apm/degradation/cpu-hog` hogs cpu in the
+[API Gateway](https://github.com/perguard/spring-petclinic-microservices/blob/apm/degradation/cpu-hog/spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/boundary/web/ApiGatewayController.java#L91).
+If you use perform load testing, you should be able to monitor the performance degradations over time.
 
 ### Updating Docker Compose
 
