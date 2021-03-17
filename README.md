@@ -107,3 +107,27 @@ with [Apache Kafka](https://kafka.apache.org/).
 docker-compose rm -sfv
 ```
 
+## Contributors of this fork
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/georne">
+        <img src="https://avatars.githubusercontent.com/u/77802995?v=3?s=100" width="100px;" alt=""/><br />
+        <sub>Georg Neugschwandtner</sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/tkalog">
+        <img src="https://avatars.githubusercontent.com/u/47557444?v=3?s=100" width="100px;" alt=""/><br />
+        <sub>Anastasios Kalogeropoulos</sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/johanneskross">
+        <img src="https://avatars.githubusercontent.com/u/3582380?v=3?s=100" width="100px;" alt=""/><br />
+        <sub>Johannes Kross</sub>
+      </a>
+    </td>
+  </tr>
+</table>
